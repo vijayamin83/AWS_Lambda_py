@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>&lambda; AWS Lambda </title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/floating-labels/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://getbootstrap.com/docs/4.0/examples/floating-labels/floating-labels.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="row col-md-10 ">
+        <div class="col-md-6">
+            <form name="frmLambda" onsubmit="javascript: return validateForm();" action="." method="post" enctype="multipart/form-data">
+      <div class="text-center mb-4">
+        <img class="mb-4" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTmc3BTBnmkW0m3n1fTmAp-i36X6GlrgE0sXKX8GbMt0jXA3uV&s" alt="" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">LAMBDA <strong>&lambda;</strong> </h1>
+        <p><strong> Crate Lambda & Invoke lambda</strong></p>
+      </div>
+
+      <input type="hidden" name="ltype" id="ltype" value="lambda">
+
+      <div class="form-label-group">
+        <input type="text" id="funName" name="funName" class="form-control" placeholder="Function name" required autofocus>
+        <label for="funName">Function name</label>
+      </div>
+
+      <div class="form-group" style="margin-bottom: -14px;" >
+        <select style="height: 50px;" class="form-control" id="runTime" name="runTime">
+  <optgroup label="Node.js">
+    <option value="nodejs12.x">Node.js 12</option>
+    <option value="nodejs10.x">Node.js 10</option>
+    <option value="nodejs8.10">Node.js 8.10</option>
+  </optgroup>
+
+  <optgroup label="Python">
+    <option value="python3.8">Python 3.8</option>
+    <option value="python3.7">Python 3.7</option>
+    <option value="python3.6">Python 3.6</option>
+    <option value="python2.7">Python 2.7</option>
+  </optgroup>
+
+   <optgroup label="Java">
+    <option value="java11">Java 11</option>
+    <option value="java8">Java 8</option>
+  </optgroup>
+
+  <optgroup label="Go">
+    <option value="go1.x">Go 1.x</option>
+  </optgroup>
+
+  <optgroup label=".NET Core">
+    <option value="dotnetcore2.1">.NET Core 2.1</option>
+  </optgroup>
+
+
+</select>
+        <label for="runTime">&nbsp;</label>
+      </div>
+
+      <div class="form-label-group">
+        <input type="text" id="role" name="role" class="form-control" value="arn:aws:iam::112911278656:role/FullAccess-Lambda-DynamoDB" placeholder="ARN Role" required autofocus>
+        <label for="role">ARN Role</label>
+      </div>
+
+      <div class="form-label-group">
+        <input type="text" id="handler" name="handler" class="form-control" placeholder="Handler" required autofocus>
+        <label for="handler">Handler Ex. index.handler</label>
+      </div>
+
+      <div class="form-label-group">
+        <input type="text" id="env" name="env_" class="form-control" placeholder="Environment Variable">
+        <label for="env">Environment Variable Ex. {
+            'Key': 'Value'
+        } json format </label>
+      </div>
+
+      <div class="form-label-group">
+        <input type="file" class="form-control-file" id="photo" name="photo" required autofocus>
+        <label for="photo">upload zip file</label>
+      </div>
+
+      <div class="form-label-group">
+    <textarea placeholder='Event Ex. {
+  "key1": "value1",
+  "key2": "value2",
+  "key3": "value3"
+}' class="form-control" id="event" name="event" rows="3"></textarea>
+    <label for="event">&nbsp;</label>
+  </div>
+
+
+      <input type="submit" name="" class="btn btn-lg btn-primary" value="Create Lambda">
+      <input type="submit" name="" class="btn btn-lg btn-danger" value="Create & Invoke" onclick="javascript: document.getElementById('ltype').value='lambda_invoke'" >
+      <!-- <input type="submit" onclick="javascript: document.getElementById('ltype').value='lambda_update'" name="" class="btn btn-lg btn-success" value="Update Lambda"> -->
+      <p class="mt-5 mb-3 text-muted text-center">iMagic Solutions</p>
+    </form>
+        </div>
+
+        <div class="col-md-6">
+            
+
+          <br><br><br><br><br><br><br><br>
+
+          
+
+          Lambda Response :: <br> 
+        
+        <div class="alert alert-primary" role="alert">
+        {{ res_lambda }}
+        </div>
+        <br>
+        Invoke Lambda Response :: <br>
+        <div class="alert alert-success" role="alert">
+        {{ res_invoke }}
+        </div>
+        <br>
+        <!-- Update Lambda & Invoke Response :: <br>
+        <div class="alert alert-warning" role="alert">
+        {{ res_invoke }}
+        </div> -->
+
+    </form>
+        </div>
+
+    </div>
+    
+  </body>
+</html>
+
+<script type="text/javascript">
+  
+  function validateForm(){
+
+    var env = document.getElementById('env').value;
+    var event = document.getElementById('event').value;
+
+    if(env != '')
+    {
+        return IsValidJSONString(env,'environment variable','env') 
+    }
+    if(event != '')
+    {
+        return IsValidJSONString(event,'event','event') 
+    }
+    
+
+  }
+
+  function IsValidJSONString(json,str,id) {
+    try {
+        JSON.parse(json);
+    } catch (e) {
+        alert ('Invalid json, entered in ' + str);
+        document.getElementById(id).focus;
+        return false;
+    }
+    return true;
+  }
+</script>
