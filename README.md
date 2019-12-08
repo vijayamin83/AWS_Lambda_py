@@ -24,11 +24,7 @@ Install Flask
 
 Run project
 
-> git clone 
-
-OR
-
-Download the project zip file from upwork.
+> git clone https://github.com/kalpeshims/aws_boto3_py.git
 
 > cd aws_boto3_py
 

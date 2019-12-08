@@ -29,6 +29,7 @@
       </div>
 
       <input type="hidden" name="ltype" id="ltype" value="lambda">
+      <input type="hidden" name="ext" id="ext" value="js">
 
       <div class="form-label-group">
         <input type="text" id="funName" name="funName" class="form-control" placeholder="Function name" required autofocus>
@@ -36,11 +37,11 @@
       </div>
 
       <div class="form-group" style="margin-bottom: -14px;" >
-        <select style="height: 50px;" class="form-control" id="runTime" name="runTime">
+        <select onchange="javascript: setExt(this.value)" style="height: 50px;" class="form-control" id="runTime" name="runTime">
   <optgroup label="Node.js">
-    <option value="nodejs12.x">Node.js 12</option>
-    <option value="nodejs10.x">Node.js 10</option>
-    <option value="nodejs8.10">Node.js 8.10</option>
+    <option data-ext="A" value="nodejs12.x">Node.js 12</option>
+    <option data-ext="B" value="nodejs10.x">Node.js 10</option>
+    <option data-ext="C" value="nodejs8.10">Node.js 8.10</option>
   </optgroup>
 
   <optgroup label="Python">
@@ -69,7 +70,7 @@
       </div>
 
       <div class="form-label-group">
-        <input type="text" id="role" name="role" class="form-control" value="arn:aws:iam::112911278656:role/FullAccess-Lambda-DynamoDB" placeholder="ARN Role" required autofocus>
+        <input type="text" id="role" name="role" class="form-control" value="" placeholder="ARN Role" required autofocus>
         <label for="role">ARN Role</label>
       </div>
 
@@ -85,10 +86,23 @@
         } json format </label>
       </div>
 
-      <div class="form-label-group">
+    <div class="form-group" style="margin-bottom: -14px;" >
+        <select onchange="javascript: radio_upload(this.value)" style="height: 50px;" class="form-control" id="upload_opt" name="upload_opt">
+        <option value="zip">Upload zip file</option>
+        <option value="textarea">Write code in textarea</option>
+    </select>
+    <label for="upload_opt">&nbsp;</label>
+      </div>
+
+      <div class="form-label-group" id="upload_zip">
         <input type="file" class="form-control-file" id="photo" name="photo" required autofocus>
         <label for="photo">upload zip file</label>
       </div>
+
+      <div class="form-label-group" style="display: none;" id="upload_textarea" >
+    <textarea placeholder='Wrie code' class="form-control" id="code" name="code" rows="10"></textarea>
+    <label for="code">&nbsp;</label>
+  </div>
 
       <div class="form-label-group">
     <textarea placeholder='Event Ex. {
@@ -142,8 +156,35 @@
   
   function validateForm(){
 
+
+
     var env = document.getElementById('env').value;
     var event = document.getElementById('event').value;
+    
+    
+    var ext = document.getElementById('ext').value
+    var upload_opt = document.getElementById('upload_opt').value
+
+    if(ext == ''){
+
+      if(upload_opt == 'textarea')
+          alert('Please upload zip file only width ' + document.getElementById('runTime').value + ' runtime ')
+
+
+        document.getElementById('upload_zip').style.display = 'block'
+          document.getElementById('upload_textarea').style.display = 'none'
+
+          document.getElementById("code").removeAttribute("required");
+          document.getElementById("photo").setAttribute("required",true);
+
+          document.getElementById("upload_opt").options[0].selected = true;
+
+          return false;
+      }
+  
+
+
+    // required autofocus
 
     if(env != '')
     {
@@ -155,6 +196,69 @@
     }
     
 
+  }
+
+  function setExt(runtime) {
+    
+    var ext = ""
+    if(runtime.search("node") != -1)
+    {
+      ext = "js"
+    }
+    else if(runtime.search("python") != -1)
+    { 
+      ext = "py"
+    }
+    else{
+
+    }
+    document.getElementById('ext').value = ext
+
+
+  }
+
+  function radio_upload(val) {
+
+     // document.getElementById('upload_opt').style.display = 'none';
+     //  document.getElementById('upload_textarea').style.display = 'none';
+     //  document.getElementById('upload_zip').style.display = 'block';
+
+    var ext = document.getElementById('ext').value 
+    if(ext != '')
+    {
+      if(val == 'zip'){
+          
+
+          document.getElementById('upload_zip').style.display = 'block'
+          document.getElementById('upload_textarea').style.display = 'none'
+
+          document.getElementById("code").removeAttribute("required");
+          document.getElementById("photo").setAttribute("required",true);
+
+
+      }
+      else if(val == 'textarea'){
+
+        document.getElementById('upload_zip').style.display = 'none'
+          document.getElementById('upload_textarea').style.display = 'block'
+
+          document.getElementById("photo").removeAttribute("required");
+          document.getElementById("code").setAttribute("required",true);
+
+      }
+    }else{
+
+          document.getElementById('upload_zip').style.display = 'block'
+          document.getElementById('upload_textarea').style.display = 'none'
+
+          document.getElementById("code").removeAttribute("required");
+          document.getElementById("photo").setAttribute("required",true);
+
+          document.getElementById("upload_opt").options[0].selected = true;
+
+
+    }
+    // body...
   }
 
   function IsValidJSONString(json,str,id) {

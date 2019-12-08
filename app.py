@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request
-import boto3, zipfile, os, json, sqlite3 
+import boto3, zipfile, os, json
+#sqlite3 
 
 iam_client = boto3.client('iam')
 lambda_client = boto3.client('lambda')
@@ -9,13 +10,13 @@ app = Flask(__name__)
 class ResourceConflictException(Exception): pass
 
 # create database;
-conn = sqlite3.connect('templates/awslambda.db')
-c = conn.cursor()
+# conn = sqlite3.connect('templates/awslambda.db')
+# c = conn.cursor()
 
-def create_table():
-	c.execute('CREATE TABLE IF NOT EXISTS lambda_function( id integer PRIMARY KEY AUTOINCREMENT, fun_name text not null, action text NOT NULL, res_lambda text default null, res_invoke text default null);')
+# def create_table():
+# 	c.execute('CREATE TABLE IF NOT EXISTS lambda_function( id integer PRIMARY KEY AUTOINCREMENT, fun_name text not null, action text NOT NULL, res_lambda text default null, res_invoke text default null);')
 
-create_table()
+# create_table()
 
 # def data_entry():
 # 	c.execute('INTER INTO lambda_function VALUES(1,"fun_name","action","res_lambda","res_invoke")');
@@ -136,7 +137,7 @@ def getvalue():
 		resInvoke = ""
 		#insQue = insQue + "'lambda', '"+json.dumps(resLambda)+"',null)"
 
-	print ("########## sqlite query \n\n")
+	# print ("########## sqlite query \n\n")
 	#print (insQue)	
 
 	# c.execute(insQue)
